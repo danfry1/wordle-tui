@@ -1,0 +1,9 @@
+/target
+
+# Nix
+/result
+/result-*
+
+# Editor / OS
+.DS_Store
+*.swp

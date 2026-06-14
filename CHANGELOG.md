@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Optional `--daily` mode (also `WORDLE_TUI_DAILY=1`) that plays the official
   New York Times daily puzzle, fetched via the system `curl`.
 - `--help` and `--version` flags.
+- `WORDLE_TUI_SOLUTION` override to pin a fixed answer (used for the demo
+  recording and deterministic testing).
 - Extensive test suite covering scoring, game state, word-list invariants,
   date/JSON parsing, formatting, and rendering.
 

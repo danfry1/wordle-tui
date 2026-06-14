@@ -11,7 +11,7 @@ repository = "https://github.com/danfry1/wordle-tui"
 homepage = "https://github.com/danfry1/wordle-tui"
 keywords = ["wordle", "game", "tui", "ratatui", "terminal"]
 categories = ["games", "command-line-utilities"]
-exclude = [".github/", "packaging/", "flake.nix", "flake.lock", "*.png"]
+exclude = [".github/", "packaging/", "demo/", "flake.nix", "flake.lock", "*.png"]
 
 # Supply-chain notes:
 # - Single direct dependency to minimize attack surface.

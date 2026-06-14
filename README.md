@@ -5,14 +5,7 @@ A beautiful terminal word-guessing game built with [ratatui](https://ratatui.rs)
 Six guesses, five letters, color-coded feedback, an on-screen keyboard, and a
 shareable emoji grid — all in your terminal.
 
-```
-                              W O R D L E
-                     No. 1821  ·  2026-06-14  ·  official
-
-        ╭───────╮ ╭───────╮ ╭───────╮ ╭───────╮ ╭───────╮
-        │   S   │ │   E   │ │   P   │ │   I   │ │   A   │
-        ╰───────╯ ╰───────╯ ╰───────╯ ╰───────╯ ╰───────╯
-```
+![wordle-tui demo](https://raw.githubusercontent.com/danfry1/wordle-tui/main/demo/wordle-tui.gif)
 
 ## Features
 

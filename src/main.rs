@@ -80,7 +80,9 @@ fn main() -> std::io::Result<()> {
         return Ok(());
     }
 
-    let daily = if opts.daily {
+    let daily = if let Some(forced) = solution_override() {
+        forced
+    } else if opts.daily {
         daily::fetch_today().unwrap_or_else(offline_daily)
     } else {
         offline_daily()
@@ -212,6 +214,28 @@ fn print_summary(app: &App) {
     println!();
 }
 
+/// Reads an optional fixed solution from `WORDLE_TUI_SOLUTION`. Useful for demos
+/// and deterministic testing; takes priority over both daily and offline words.
+fn solution_override() -> Option<Daily> {
+    let value = std::env::var("WORDLE_TUI_SOLUTION").ok()?;
+    forced_daily(&value)
+}
+
+/// Builds a practice `Daily` from `word` if it is exactly five ASCII letters.
+fn forced_daily(word: &str) -> Option<Daily> {
+    let word = word.trim().to_ascii_lowercase();
+    if word.len() == 5 && word.bytes().all(|b| b.is_ascii_lowercase()) {
+        Some(Daily {
+            solution: word,
+            date: daily::today_date_string(),
+            number: None,
+            official: false,
+        })
+    } else {
+        None
+    }
+}
+
 /// Picks a deterministic offline word so the same day yields the same puzzle.
 fn offline_daily() -> Daily {
     let secs = SystemTime::now()
@@ -258,6 +282,18 @@ mod tests {
         assert_eq!(with_thousands(1821), "1,821");
         assert_eq!(with_thousands(12345), "12,345");
         assert_eq!(with_thousands(1_000_000), "1,000,000");
+    }
+
+    #[test]
+    fn forced_daily_validates_input() {
+        assert_eq!(forced_daily("crane").unwrap().solution, "crane");
+        assert_eq!(forced_daily("CRANE").unwrap().solution, "crane");
+        assert_eq!(forced_daily(" crane ").unwrap().solution, "crane");
+        assert!(!forced_daily("crane").unwrap().official);
+        assert!(forced_daily("cat").is_none());
+        assert!(forced_daily("toolong").is_none());
+        assert!(forced_daily("12345").is_none());
+        assert!(forced_daily("").is_none());
     }
 
     #[test]

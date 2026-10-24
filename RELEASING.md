@@ -16,10 +16,10 @@ git push origin vX.Y.Z
 The tag runs `.github/workflows/release.yml`:
 
 - `build` builds each target and attaches the archives to a GitHub Release.
+- `publish-crate` checks the tag matches `Cargo.toml` and publishes to crates.io
+  through Trusted Publishing (OIDC; no stored token).
 - `homebrew-formula` opens the Homebrew tap pull request (below).
 - `attest` signs build provenance for the release assets.
-
-The crate is not published to crates.io by CI.
 
 ## Publish the Homebrew bottles
 

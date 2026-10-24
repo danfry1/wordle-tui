@@ -6,13 +6,15 @@ on:
       - "v*"
 
 permissions:
-  contents: write
+  contents: read
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
   build:
+    permissions:
+      contents: write # upload release assets
     name: Build ${{ matrix.goos }}_${{ matrix.goarch }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -36,11 +38,14 @@ jobs:
             goos: darwin
             goarch: arm64
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
 
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # master
         with:
+          toolchain: stable
           targets: ${{ matrix.target }}
 
       - name: Install cross-compilation linker
@@ -71,24 +76,26 @@ jobs:
           echo "asset=$asset" >> "$GITHUB_OUTPUT"
 
       - name: Upload release asset
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
         with:
           files: ${{ steps.package.outputs.asset }}
           generate_release_notes: true
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: ${{ steps.package.outputs.asset }}
           path: ${{ steps.package.outputs.asset }}
 
   formula:
+    permissions:
+      contents: write # upload release assets
     name: Generate Homebrew formula
     needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Download all tarballs
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           path: dist
           merge-multiple: true
@@ -160,6 +167,6 @@ jobs:
           cat wordle-tui.rb
 
       - name: Attach formula to release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
         with:
           files: wordle-tui.rb
